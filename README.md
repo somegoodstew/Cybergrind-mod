@@ -30,7 +30,7 @@ enemies and a settings menu. Made to be played as **V1** with the
 - **Armor that scales with the wave**, shown on your armor bar. It's removed when the run ends and never saved to your player.
 - **No status-effect cheese:** no poison, slowness, weakness, wither or darkness on you during a run. Witches only throw Harming.
 - **A wave HUD:** boss bar, wave titles, a raid horn, armor-upgrade messages, and a red particle wall around the arena.
-- **Your own run music** in place of Minecraft's (see [Music](#music)).
+- **Your own run music**: drop songs in a folder, then shuffle them or pick which ones play (see [Music](#music)).
 - **A settings menu**, opened with **K** or from the pause menu.
 
 ![SSS Hitstorm into ULTRAKILL rank](docs/media/hitstorm.gif)
@@ -60,13 +60,15 @@ Cybergrind.
 | Menu option | What it does |
 |---|---|
 | **Mob Drops** | Loot from arena enemies. XP drops either way. |
-| **Run Music** | Your music track during a run. |
+| **Run Music** | Your own songs during a run (see [Music](#music)). |
 | **End on Death** | **On:** dying (V1 or Steve) ends the run at once. **Off:** the run goes on, and you're brought back to the arena after respawning. |
 | **Arena Wall** | **On:** a red ring around where you started, and 5 seconds outside it ends the run. **Off:** no wall, waves spawn around you, and enemies that fall far behind come back to you. |
 | **Enemy Outlines** | Always / only for a wave's last 5 enemies / off. |
 | **Starting Wave** | 1-999. Type it or use the buttons. |
 | **Max Enemies per Wave** | 5-100. Bosses come on top. Lower runs smoother. |
 | **Spawn Radius** | 8-40 blocks. The wall is 4 blocks further out. |
+| **Music...** | Pick, order and shuffle your songs (see [Music](#music)). |
+| **ULTRAKILL Settings...** | Opens the ULTRAKILL x Minecraft mod's settings, including Progression Mode (needs that mod). |
 | **START / STOP** | Start a run where you stand, or end it. **Skip Wave** clears the current wave. |
 
 Commands: `/cybergrind start`, `/cybergrind stop`, `/cybergrind skip`.
@@ -76,23 +78,31 @@ losing.
 
 ## Music
 
-**No music comes with this mod.** It plays a track you add yourself, from a resource pack:
+**No music comes with this mod.** Add your own songs and they play during runs in place of Minecraft's music.
 
-```
-resourcepacks/Cybergrind Music/
-  pack.mcmeta
-  assets/cybergrind/sounds/intro.ogg   (optional: played once at the start)
-  assets/cybergrind/sounds/music.ogg   (looped for the rest of the run)
-```
+1. Open the menu (**K**) → **Music...** → **Open Folder**. That's the `cybergrind-music` folder in your Minecraft folder.
+2. Put your songs in it as **`.ogg` (Ogg Vorbis)** files. To convert `.mp3`, `.wav` or `.flac`, use
+   [Audacity](https://www.audacityteam.org/) (File → Export Audio → Ogg) or any converter.
+3. Click **Rescan**. Your songs show up in the list.
 
-The files must be Ogg Vorbis (`.ogg`). The pack needs a `pack.mcmeta` for resource format 97:
+In the **Music...** screen:
 
-```json
-{ "pack": { "description": "Cybergrind run music", "min_format": 97, "max_format": 97 } }
-```
+| Control | What it does |
+|---|---|
+| **ON / OFF** next to a song | Choose which songs play. New songs start ON. |
+| **▲ / ▼** | Change the order of the list. The order is saved. |
+| **Shuffle** | **On:** random order, never the same song twice in a row. **Off:** plays the list top to bottom, then starts over. |
+| **Next Song ▶** | Skip to another song during a run. |
+| **Open Folder / Rescan** | Add or remove songs without restarting the game. |
 
-Turn the pack on in Options → Resource Packs. If you use music from a game or album you own, keep that pack to yourself.
-Please don't upload or share other people's music.
+A single song loops. The music follows Minecraft's **Music** volume slider, and **pauses while the Esc menu or the Cybergrind
+menu is open**, picking up where it left off when you close it. The inventory and chat don't pause it. **Run Music** in the
+main menu turns it all off.
+
+You can also use a resource pack: `assets/cybergrind/sounds/music.ogg`, plus an optional `intro.ogg` played first. It shows up
+in the list as "Cyber Grind (resource pack)".
+
+Only use music you have the right to use, and please don't share other people's music with the mod.
 
 ## Known issues
 

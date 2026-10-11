@@ -2,6 +2,13 @@
 	"required": true,
 	"package": "dev.cybergrind.client.mixin",
 	"compatibilityLevel": "JAVA_25",
-	"client": ["MusicManagerMixin"],
-	"injectors": { "defaultRequire": 1 }
+	"client": [
+		"MusicManagerMixin",
+		"SoundBufferLibraryMixin",
+		"SoundManagerAccessor",
+		"SoundEngineAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

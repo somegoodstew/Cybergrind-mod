@@ -16,8 +16,14 @@ public final class Settings {
 
 	/** Arena mobs drop their loot. XP drops either way (Progression Mode turns it into P). */
 	public volatile boolean drops = true;
-	/** The run's own music in place of Minecraft's (the player's track, from the "Cybergrind Music" resource pack). */
+	/** Run music in place of Minecraft's: the player's own songs (MusicLibrary), picked in the Music menu. */
 	public volatile boolean music = true;
+	/** Run music in random order (never the same song twice in a row); off: in the order the menu lists them. */
+	public volatile boolean shuffle = true;
+	/** Songs switched off in the menu (file names; new songs are on until switched off). */
+	public java.util.Set<String> disabledTracks = new java.util.LinkedHashSet<>();
+	/** The song list's order from the menu (file names; songs not in it go after, A-Z). */
+	public java.util.List<String> trackOrder = new java.util.ArrayList<>();
 	/** Dying (V1 or Steve) ends the run at once. Off: the run goes on, and you're brought back to the arena after respawning. */
 	public volatile boolean endOnDeath = true;
 	/** The arena wall (red ring, 5 s outside ends the run). Off: no wall, and enemies left too far behind come to you. */
@@ -76,6 +82,12 @@ public final class Settings {
 		range = Math.clamp(range, 8, 40);
 		if (outlines == null) {
 			outlines = Outlines.ALWAYS;
+		}
+		if (disabledTracks == null) {
+			disabledTracks = new java.util.LinkedHashSet<>();
+		}
+		if (trackOrder == null) {
+			trackOrder = new java.util.ArrayList<>();
 		}
 	}
 

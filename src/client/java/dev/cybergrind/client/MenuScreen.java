@@ -46,7 +46,7 @@ public final class MenuScreen extends Screen {
 		toggle(left, y, half, "Mob Drops", () -> s.drops, v -> s.drops = v,
 			"Loot from arena enemies. XP drops either way (Progression Mode turns it into P).");
 		toggle(left + half + 4, y, half, "Run Music", () -> s.music, v -> s.music = v,
-			"The Cyber Grind music in place of Minecraft's during a run (from the \"Cybergrind Music\" resource pack).");
+			"Your own songs in place of Minecraft's music during a run (pick them in Music...).");
 		y += ROW;
 		toggle(left, y, half, "End on Death", () -> s.endOnDeath, v -> s.endOnDeath = v,
 			"ON: dying (V1 or Steve) ends the run at once. OFF: the run goes on, and after respawning you're brought back to the arena.");
@@ -76,15 +76,19 @@ public final class MenuScreen extends Screen {
 		stepper(left, y, "Spawn Radius", () -> s.range, v -> s.range = v, 5, 1);
 		y += ROW;
 
-		// 3. progression mode belongs to the ULTRAKILL mod: open its own settings screen
+		// 3. the run music playlist, and the ULTRAKILL mod's own settings (where its Progression Mode is)
+		addRenderableWidget(Button.builder(Component.literal("Music..."), b -> minecraft.gui.setScreen(new MusicScreen(this)))
+			.bounds(left, y, half, 20)
+			.tooltip(Tooltip.create(Component.literal("Your run music: songs in the cybergrind-music folder, each on or off, shuffled or in order.")))
+			.build());
 		Constructor<?> ukSettings = ultrakillSettings();
-		Button uk = addRenderableWidget(Button.builder(Component.literal("ULTRAKILL Settings (Progression Mode)..."), b -> {
+		Button uk = addRenderableWidget(Button.builder(Component.literal("ULTRAKILL Settings..."), b -> {
 				try {
 					minecraft.gui.setScreen((Screen) ukSettings.newInstance(this));
 				} catch (ReflectiveOperationException e) {
 					b.active = false;
 				}
-			}).bounds(left, y, WIDTH, 20)
+			}).bounds(left + half + 4, y, half, 20)
 			.tooltip(Tooltip.create(Component.literal(ukSettings != null
 				? "Progression Mode is the ULTRAKILL mod's setting: guns bought with P earned from XP. Turning it on takes your guns and starts P at 0."
 				: "The ULTRAKILL x Minecraft mod isn't installed.")))
