@@ -106,6 +106,7 @@ Only use music you have the right to use, and please don't share other people's 
 
 ## Known issues
 
+- When mobs go in water they slow down/have trouble moving and getting on land.
 - Ground fires from ghast and blaze fireballs can still burn enemies.
 - Explosions from Bombers and evoker fangs still hurt other enemies.
 - Mobs only jump when their pathfinding needs to, so they can't jump up to V1 in mid-air. An enemy stuck on terrain can be cleared with Skip Wave or by moving far away.
