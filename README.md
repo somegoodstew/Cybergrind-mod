@@ -98,8 +98,14 @@ Please don't upload or share other people's music.
 
 - Ground fires from ghast and blaze fireballs can still burn enemies.
 - Explosions from Bombers and evoker fangs still hurt other enemies.
-- Mobs only jump when their pathfinding needs to, so they can't jump up to V1 in mid-air. An enemy stuck on terrain can be cleared with Skip Wave.
+- Mobs only jump when their pathfinding needs to, so they can't jump up to V1 in mid-air. An enemy stuck on terrain can be cleared with Skip Wave or by moving far away.
 
+## Planned Features
+- Difficulty Modes
+- Porting over the Ultrakill enemies to Minecraft with the same logic.
+- Vanilla Enemy Types
+- Drops/Pickups such as Double Weapons/Health etc.
+- Custom Arena/Radius Wall
 ## Reporting a bug
 
 Open an [issue](../../issues) and say what you did and what went wrong. Attach Minecraft's `logs/latest.log`.
