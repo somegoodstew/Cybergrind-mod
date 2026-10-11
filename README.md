@@ -40,7 +40,7 @@ enemies and a settings menu. Made to be played as **V1** with the
 - **Minecraft: Java Edition 26.3** with **Fabric Loader** 0.19.3 or newer and **Fabric API** for 26.3.
 - **Java 25**, which the Minecraft launchers provide.
 - **Single-player only.**
-- Optional: **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** 0.1.2. With it, a V1 death
+- Optional but Highly Recommended: **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** 0.1.2. With it, a V1 death
   ends the run instantly, and the menu has a button for that mod's settings, including Progression Mode.
 
 ## Installing
