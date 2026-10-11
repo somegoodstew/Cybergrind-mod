@@ -1,5 +1,11 @@
 # Cybergrind for Minecraft
 
+![Wave 28 starts, then a chain of explosions](docs/media/wave28.gif)
+
+[![Watch the full showcase on YouTube](https://img.youtube.com/vi/eWu_tSvfp5c/maxresdefault.jpg)](https://www.youtube.com/watch?v=eWu_tSvfp5c)
+
+*Click the picture for the full showcase on YouTube.*
+
 ULTRAKILL's **Cyber Grind** as a Minecraft mod: endless, escalating waves of Minecraft mobs around you, with bosses, special
 enemies and a settings menu. Made to be played as **V1** with the
 [ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft) mod, and it works as plain Steve too.
@@ -26,6 +32,8 @@ enemies and a settings menu. Made to be played as **V1** with the
 - **A wave HUD:** boss bar, wave titles, a raid horn, armor-upgrade messages, and a red particle wall around the arena.
 - **Your own run music** in place of Minecraft's (see [Music](#music)).
 - **A settings menu**, opened with **K** or from the pause menu.
+
+![SSS Hitstorm into ULTRAKILL rank](docs/media/hitstorm.gif)
 
 ## Requirements
 
