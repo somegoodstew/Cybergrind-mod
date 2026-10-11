@@ -1,0 +1,8 @@
+{
+	"intro": {
+		"sounds": [{ "name": "cybergrind:intro", "stream": true }]
+	},
+	"music": {
+		"sounds": [{ "name": "cybergrind:music", "stream": true }]
+	}
+}

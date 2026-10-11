@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "cybergrind",
+	"version": "${version}",
+	"name": "Cybergrind",
+	"description": "ULTRAKILL-style endless waves of Minecraft mobs, with a settings menu (K, or the pause menu) and run music from your own resource pack.",
+	"authors": [
+		"somegoodstew"
+	],
+	"contact": {
+		"homepage": "https://github.com/somegoodstew/Cybergrind-mod",
+		"sources": "https://github.com/somegoodstew/Cybergrind-mod",
+		"issues": "https://github.com/somegoodstew/Cybergrind-mod/issues"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.cybergrind.Cybergrind"
+		],
+		"client": [
+			"dev.cybergrind.client.CybergrindClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"mixins": [
+		"cybergrind.mixins.json",
+		{
+			"config": "cybergrind.client.mixins.json",
+			"environment": "client"
+		}
+	]
+}

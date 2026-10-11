@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "dev.cybergrind.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"MobMixin",
+		"SpiderAttackGoalMixin",
+		"SpiderTargetGoalMixin",
+		"WitchMixin",
+		"LargeFireballAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
