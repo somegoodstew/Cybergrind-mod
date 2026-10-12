@@ -1,4 +1,4 @@
-# Cybergrind for Minecraft
+# Cybergrind for Ultrakill X Minecraft
 
 ![Wave 28 starts, then a chain of explosions](docs/media/wave28.gif)
 
