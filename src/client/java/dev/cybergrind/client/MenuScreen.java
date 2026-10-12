@@ -1,6 +1,7 @@
 package dev.cybergrind.client;
 
 import dev.cybergrind.Arena;
+import dev.cybergrind.Cybergrind;
 import dev.cybergrind.Settings;
 import java.lang.reflect.Constructor;
 import java.util.function.BiConsumer;
@@ -62,10 +63,12 @@ public final class MenuScreen extends Screen {
 			.withValues(Settings.Outlines.values())
 			.withTooltip(o -> Tooltip.create(Component.literal("The red/gold/purple outlines on enemies, seen through walls. "
 				+ "Last 5 Enemies: only once a wave is down to its last 5.")))
-			.create(left, y, WIDTH, 20, Component.literal("Enemy Outlines"), (b, value) -> {
+			.create(left, y, half, 20, Component.literal("Outlines"), (b, value) -> {
 				s.outlines = value;
 				s.save();
 			}));
+		toggle(left + half + 4, y, half, "Impact Freeze", () -> s.hitStop, v -> s.hitStop = v,
+			"ULTRAKILL's impact frames, hit-stop and parry flashes freeze Minecraft's mobs for as long. Needs the Cybergrind Bridge plugin in ULTRAKILL.");
 		y += ROW;
 
 		// 2. numbers with steppers
@@ -107,9 +110,16 @@ public final class MenuScreen extends Screen {
 			.build());
 		y += ROW;
 		skip = addRenderableWidget(Button.builder(Component.literal("Skip Wave"), b -> run(Arena::skip, true))
-			.bounds(left, y, WIDTH, 20)
+			.bounds(left, y, Cybergrind.DEBUG ? half : WIDTH, 20)
 			.tooltip(Tooltip.create(Component.literal("Remove this wave's enemies and go on to the next.")))
 			.build());
+		// the Debug screen is only in development builds
+		if (Cybergrind.DEBUG) {
+			addRenderableWidget(Button.builder(Component.literal("Debug...").withStyle(ChatFormatting.GRAY), b -> minecraft.gui.setScreen(new DebugScreen(this)))
+				.bounds(left + half + 4, y, half, 20)
+				.tooltip(Tooltip.create(Component.literal("For development: every enemy with its health, damage and abilities; spawn any of them in front of you.")))
+				.build());
+		}
 
 		addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> onClose()).bounds(width / 2 - 100, height - 28, 200, 20).build());
 		updateButtons();

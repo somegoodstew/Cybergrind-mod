@@ -101,6 +101,9 @@ public final class Arena {
 	private volatile int alive;
 
 	private ServerLevel level;
+	/** Where debug-menu enemies were spawned while no run was going (their abilities keep running there). */
+	private ServerLevel debugLevel;
+	private int debugAggroTimer;
 	private Vec3 center;
 	private int maxY;
 	private int range;
@@ -193,6 +196,7 @@ public final class Arena {
 		Settings s = Settings.get();
 		s.clamp();
 		cleanup();
+		debugLevel = null;
 		level = l;
 		center = player.position();
 		maxY = (int) Math.floor(center.y) + 6;
@@ -220,6 +224,138 @@ public final class Arena {
 		bar.setVisible(true);
 		title(Component.literal("CYBERGRIND").withStyle(ChatFormatting.RED, ChatFormatting.BOLD),
 			Component.literal("Survive.").withStyle(ChatFormatting.GRAY), 5, 40, 10);
+	}
+
+	// ---- debug menu ----
+
+	/** The ability clock (heal orbs use it to expire). */
+	int abilityTick() {
+		return abilities.tick();
+	}
+
+	Abilities abilities() {
+		return abilities;
+	}
+
+	/**
+	 * Debug menu: n of an enemy, 6 blocks in front of the player, set up as in a run (at the run's wave, or the menu's Starting
+	 * Wave when no run is going). During a run they join the wave; otherwise their abilities still run until cleared.
+	 */
+	public void debugSpawn(final ServerPlayer player, final String key, final int n) {
+		Spawns.Entry entry = Spawns.CATALOG.stream().filter(c -> c.key().equals(key)).findFirst().orElse(null);
+		if (entry == null) {
+			return;
+		}
+		ServerLevel l = player.level();
+		Vec3 look = player.getLookAngle();
+		double length = Math.max(0.01, Math.sqrt(look.x * look.x + look.z * look.z));
+		Vec3 spot = player.position().add(look.x / length * 6, 0, look.z / length * 6);
+
+		int savedWave = wave;
+		ServerLevel savedLevel = level;
+		if (!active) {
+			debugLevel = l;
+			level = l;
+			wave = Math.max(1, Settings.get().startWave);
+		}
+		CommandSourceStack source = server.createCommandSourceStack().withLevel(l).withPosition(spot).withSuppressedOutput();
+		for (int i = 0; i < n; i++) {
+			server.getCommands().performPrefixedCommand(source, entry.command());
+		}
+		int spawned = 0;
+		for (Entity e : l.getEntities(EntityTypeTest.forClass(Entity.class), e -> e.entityTags().contains(Spawns.NEW))) {
+			e.removeTag(Spawns.NEW);
+			placeNear(e, spot);
+			setup(e);
+			aggro(e, player);
+			spawned++;
+		}
+		if (active) {
+			count += spawned;
+		} else {
+			wave = savedWave;
+			level = savedLevel;
+		}
+		player.sendSystemMessage(prefix().append(Component.literal("Spawned " + spawned + "x " + entry.name()
+			+ (active ? " (joined wave " + wave + ")" : " (as at wave " + Math.max(1, Settings.get().startWave) + ")")).withStyle(ChatFormatting.GRAY)));
+	}
+
+	/** Debug menu: removes every arena enemy (during a run, this wave's: the same as Skip Wave). */
+	public void debugClear(final ServerPlayer player) {
+		if (active) {
+			skip(player);
+			return;
+		}
+		player.level().getEntities(EntityTypeTest.forClass(Entity.class), e -> e.entityTags().contains(Spawns.TAG)).forEach(Entity::discard);
+		abilities.clear();
+		player.sendSystemMessage(prefix().append(Component.literal("Cleared the debug enemies.").withStyle(ChatFormatting.GRAY)));
+	}
+
+	/**
+	 * A debug enemy goes for the player straight away (some only fight back, or need to see you first). Flying Elder Guardians and
+	 * Drones aim on their own, so they're left alone.
+	 */
+	private static void aggro(final Entity e, final ServerPlayer player) {
+		if (!(e instanceof Mob mob) || e.entityTags().contains(Spawns.PROVIDENCE) || e.entityTags().contains(Spawns.DRONE) || player.isDeadOrDying()) {
+			return;
+		}
+		if (mob instanceof Warden warden) {
+			warden.increaseAngerAt(player, 150, false);
+			warden.setAttackTarget(player);
+		} else {
+			mob.setTarget(player);
+		}
+	}
+
+	/** No run going: debug-spawned enemies still use their abilities (and webs still melt, heal orbs still heal). */
+	private void debugTick() {
+		if (debugLevel == null) {
+			return;
+		}
+		List<Entity> debugMobs = new ArrayList<>(debugLevel.getEntities(EntityTypeTest.forClass(Entity.class),
+			e -> e.isAlive() && e.entityTags().contains(Spawns.TAG)));
+		List<ServerPlayer> players = server.getPlayerList().getPlayers();
+		// once a second, any that lost you go for the nearest player again
+		if (++debugAggroTimer >= 20) {
+			debugAggroTimer = 0;
+			for (Entity e : debugMobs) {
+				Player nearest = debugLevel.getNearestPlayer(e, 64);
+				if (e instanceof Mob mob && mob.getTarget() == null && nearest instanceof ServerPlayer player) {
+					aggro(e, player);
+				}
+			}
+		}
+		abilities.tick(debugMobs, players);
+		if (!debugMobs.isEmpty()) {
+			// the no-harmful-effects rule holds for debug enemies too (the Warden's Darkness, Wither, Poison...)
+			players.forEach(Arena::clearHarmfulEffects);
+		}
+	}
+
+	/** Near a spot: on the ground within 3 blocks of it (ghasts 10 up, Providences 5 up), or the spot itself. */
+	private void placeNear(final Entity e, final Vec3 spot) {
+		ServerLevel l = (ServerLevel) e.level();
+		BlockPos found = null;
+		for (int attempt = 0; attempt < 16 && found == null; attempt++) {
+			double x = spot.x + (attempt == 0 ? 0 : random.nextDouble() * 6 - 3);
+			double z = spot.z + (attempt == 0 ? 0 : random.nextDouble() * 6 - 3);
+			for (int y = (int) Math.floor(spot.y) + 4; y > spot.y - 10; y--) {
+				BlockPos feet = BlockPos.containing(x, y, z);
+				if (standable(l, feet)) {
+					found = feet;
+					break;
+				}
+			}
+		}
+		double x = found != null ? found.getX() + 0.5 : spot.x;
+		double y = found != null ? found.getY() : spot.y;
+		double z = found != null ? found.getZ() + 0.5 : spot.z;
+		if (e instanceof Ghast) {
+			y += 10;
+		} else if (e.entityTags().contains(Spawns.PROVIDENCE) || e.entityTags().contains(Spawns.DRONE)) {
+			y += 5;
+		}
+		e.snapTo(x, y, z, random.nextFloat() * 360, 0);
 	}
 
 	public void stop(final ServerPlayer player) {
@@ -253,7 +389,12 @@ public final class Arena {
 	// ---- the tick ----
 
 	public void tick() {
+		if (HitStop.frozen()) {
+			// ULTRAKILL's impact frame: the run's clock waits with the frozen mobs
+			return;
+		}
 		if (!active) {
+			debugTick();
 			return;
 		}
 
@@ -301,7 +442,8 @@ public final class Arena {
 			boolean outlined = outlinesWanted();
 			for (Entity e : mobs) {
 				if (e instanceof LivingEntity le) {
-					outline(le, outlined);
+					// a dead Drone on its dive keeps no outline
+					outline(le, outlined && !le.entityTags().contains("cg_diving"));
 					// a wither skull's Wither effect would still kill other enemies after the hit itself was blocked
 					if (le.hasEffect(MobEffects.WITHER)) {
 						le.removeEffect(MobEffects.WITHER);
@@ -553,7 +695,7 @@ public final class Arena {
 		clearVexes();
 		for (ServerLevel l : server.getAllLevels()) {
 			l.getEntities(EntityTypeTest.forClass(Entity.class),
-				e -> e.entityTags().contains(Spawns.TAG) || e.entityTags().contains(CENTER_TAG)).forEach(Entity::discard);
+				e -> e.entityTags().contains(Spawns.TAG) || e.entityTags().contains(CENTER_TAG) || e.entityTags().contains(Beams.FX)).forEach(Entity::discard);
 		}
 		alive = 0;
 	}
@@ -574,6 +716,10 @@ public final class Arena {
 			placeInSky(e, around, topY);
 		} else {
 			placeOnGround(e, around, topY);
+			if (e.entityTags().contains(Spawns.PROVIDENCE) || e.entityTags().contains(Spawns.DRONE)) {
+				// Flying Elder Guardians and Drones fly: 5 blocks above the ground spot
+				e.snapTo(e.getX(), e.getY() + 5, e.getZ(), e.getYRot(), 0);
+			}
 		}
 	}
 

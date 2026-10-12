@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Cybergrind Bridge: an ULTRAKILL (BepInEx 5) plugin that tells the Cybergrind mod when ULTRAKILL's time stops (impact frames,
+    hit-stop, parry flashes), so Minecraft's mobs freeze for exactly as long.
+    Builds against your own ULTRAKILL install:
+      dotnet build -c Release -p:UltrakillDir="E:\SteamLibrary\steamapps\common\ULTRAKILL"
+    No game files are copied into the output.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>CybergrindBridge</AssemblyName>
+    <RootNamespace>CybergrindBridge</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <Version>1.0.2</Version>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <UltrakillDir Condition="'$(UltrakillDir)' == ''">E:\SteamLibrary\steamapps\common\ULTRAKILL</UltrakillDir>
+    <BepInExDir Condition="'$(BepInExDir)' == ''">$(UltrakillDir)\BepInEx</BepInExDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExDir)\core\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(UltrakillDir)\ULTRAKILL_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(UltrakillDir)\ULTRAKILL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

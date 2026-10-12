@@ -7,7 +7,15 @@
 		"SpiderAttackGoalMixin",
 		"SpiderTargetGoalMixin",
 		"WitchMixin",
-		"LargeFireballAccessor"
+		"LargeFireballAccessor",
+		"MobAccessor",
+		"ElderGuardianMixin",
+		"SmallFireballMixin",
+		"DisplayInvoker",
+		"BlockDisplayInvoker",
+		"PrimedTntAccessor",
+		"CreeperMixin",
+		"TextDisplayInvoker"
 	],
 	"injectors": {
 		"defaultRequire": 1

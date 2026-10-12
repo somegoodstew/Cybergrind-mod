@@ -21,9 +21,26 @@ import org.slf4j.LoggerFactory;
 /** Cybergrind: endless ULTRAKILL-style waves of Minecraft mobs. Server side: the run, the /cybergrind command, the drops toggle. */
 public final class Cybergrind implements ModInitializer {
 	public static final Logger LOG = LoggerFactory.getLogger("cybergrind");
+	/** A development build (gradlew build -PdebugBuild=true): the menu has the Debug screen. Releases are built without it. */
+	public static final boolean DEBUG = readDebugFlag();
+
+	private static boolean readDebugFlag() {
+		try (java.io.InputStream in = Cybergrind.class.getResourceAsStream("/cybergrind-build.properties")) {
+			java.util.Properties p = new java.util.Properties();
+			if (in != null) {
+				p.load(in);
+			}
+			return Boolean.parseBoolean(p.getProperty("debug", "false"));
+		} catch (java.io.IOException e) {
+			return false;
+		}
+	}
 
 	@Override
 	public void onInitialize() {
+		// ULTRAKILL's impact frames freeze Minecraft's mobs too (needs the Cybergrind Bridge plugin in ULTRAKILL)
+		HitStop.listen();
+		ServerTickEvents.START_SERVER_TICK.register(HitStop::tick);
 		ServerTickEvents.END_SERVER_TICK.register(server -> Arena.of(server).tick());
 		ServerLifecycleEvents.SERVER_STOPPING.register(Arena::shutdown);
 
@@ -35,11 +52,24 @@ public final class Cybergrind implements ModInitializer {
 			}
 		});
 
-		// arena ghasts' fireballs: bigger and faster
-		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> Abilities.boost(entity));
+		// arena ghasts' fireballs: bigger and faster; arena witches' clouds: short; bow users' arrows: faster
+		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
+			Abilities.boost(entity);
+			Abilities.shortenCloud(entity);
+			Abilities.quickenArrow(entity);
+			Abilities.trackVex(entity);
+		});
 
-		// ghast and blaze fireballs, wither skulls and rapid shooters' arrows don't hurt other arena enemies
-		ServerLivingEntityEvents.ALLOW_DAMAGE.register((victim, source, amount) -> !Abilities.friendlyFire(victim, source));
+		// ghast and blaze fireballs, wither skulls, witch potions and rapid shooters' arrows don't hurt other arena enemies;
+		// the Flying Elder Guardian has no thorns
+		ServerLivingEntityEvents.ALLOW_DAMAGE.register((victim, source, amount) -> !Abilities.blocked(victim, source));
+		// V1's i-frames (dashing, the moments after a hit, parries and impact frames, as ULTRAKILL reports them): no damage gets through
+		ServerLivingEntityEvents.ALLOW_DAMAGE.register((victim, source, amount) -> !(victim instanceof ServerPlayer && HitStop.invulnerable(source)));
+
+		// deaths: a Flying Elder Guardian leaves a heal orb, a Drone dives at you, a golem's death enrages the others
+		ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> Abilities.onDeath(entity));
+		// a Drone's killing blow starts its dive instead (it explodes when the dive ends)
+		ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> Abilities.allowDeath(entity));
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, selection) -> dispatcher.register(
 			Commands.literal("cybergrind")
@@ -51,7 +81,7 @@ public final class Cybergrind implements ModInitializer {
 				.then(action("start", Arena::start))
 				.then(action("stop", Arena::stop))
 				.then(action("skip", Arena::skip))));
-		LOG.info("Cybergrind loaded");
+		LOG.info("Cybergrind loaded{}", DEBUG ? " (debug build)" : "");
 	}
 
 	private static LiteralArgumentBuilder<CommandSourceStack> action(final String name, final BiConsumer<Arena, ServerPlayer> run) {

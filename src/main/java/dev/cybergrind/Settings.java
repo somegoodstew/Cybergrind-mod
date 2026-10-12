@@ -28,6 +28,8 @@ public final class Settings {
 	public volatile boolean endOnDeath = true;
 	/** The arena wall (red ring, 5 s outside ends the run). Off: no wall, and enemies left too far behind come to you. */
 	public volatile boolean wall = true;
+	/** ULTRAKILL's impact frames (hit-stop, parry flashes) freeze Minecraft's mobs for as long (needs the Cybergrind Bridge plugin). */
+	public volatile boolean hitStop = true;
 	/** When enemies are outlined (glowing, seen through walls). */
 	public volatile Outlines outlines = Outlines.ALWAYS;
 

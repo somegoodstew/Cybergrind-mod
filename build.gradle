@@ -24,8 +24,12 @@ dependencies {
 
 processResources {
 	def version = project.version
+	// the debug menu is only in jars built with -PdebugBuild=true (releases are built without it)
+	def debug = project.findProperty("debugBuild") ?: "false"
 	inputs.property "version", version
+	inputs.property "debug", debug
 	filesMatching("fabric.mod.json") { expand "version": version }
+	filesMatching("cybergrind-build.properties") { expand "debug": debug }
 }
 
 tasks.withType(JavaCompile).configureEach { it.options.release = 25 }
