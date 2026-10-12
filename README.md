@@ -56,7 +56,7 @@ enemies and a settings menu. Made to be played as **V1** with the
 - Optional but Highly Recommended: **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** 0.1.2. With it, a V1 death
   ends the run instantly, and the menu has a button for that mod's settings, including Progression Mode.
 - Optional, with ULTRAKILL x Minecraft: **Cybergrind Bridge** (`CybergrindBridge.dll`, on the Releases page), a small ULTRAKILL
-  plugin for the hit-stop freeze and V1's i-frames. Without it, everything else works.
+  plugin for the hit-stop freeze and V1's i-frames. Without it, everything else works. This will be here until **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** adds it.
 
 ## Installing
 
