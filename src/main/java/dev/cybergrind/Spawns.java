@@ -109,7 +109,7 @@ public final class Spawns {
 	/** An elder guardian, smaller and floating; Abilities flies it and fires its beams. */
 	private static final Enemy PROVIDENCE_ENEMY = new Enemy("elder_guardian", List.of(PROVIDENCE),
 		"CustomName:{text:\"Flying Elder Guardian\",color:\"light_purple\"},NoGravity:1b,"
-			+ "attributes:[{id:\"minecraft:max_health\",base:120d},{id:\"minecraft:scale\",base:0.7d}],Health:120f");
+			+ "attributes:[{id:\"minecraft:max_health\",base:70d},{id:\"minecraft:scale\",base:0.7d}],Health:70f");
 	private static final Enemy RAVAGER = plain("ravager");
 
 	static final List<List<Enemy>> TIERS = List.of(
@@ -184,7 +184,7 @@ public final class Spawns {
 		add(c, "breeze", "Breeze", t4, BREEZE, null, "Jumps around, fires a wind charge at you every 1.25 s on top of its own.", "Wind charge: 1 + knockback");
 		add(c, "bomber", "Bomber", t4, BOMBER, null, "Charged creeper (blue aura) with Speed and a short fuse; its blast is power 3, not the charged 4.",
 			"Explosion: power 3");
-		add(c, "providence", "Flying Elder Guardian", t4, PROVIDENCE_ENEMY, 120f,
+		add(c, "providence", "Flying Elder Guardian", t4, PROVIDENCE_ENEMY, 70f,
 			"Based on ULTRAKILL's Providence. Dashes twice around you, then charges 1 s (a magenta core grows, a thin beam tracks you; both turn white 0.3 s before it fires) and fires there: "
 				+ "a CROSS (a giant + of beams) or a SPIRAL (4 beams that close in). No thorns. Dying, it drops a pink glass box with a heart inside that floats slowly down; "
 				+ "touch it to heal to full.",

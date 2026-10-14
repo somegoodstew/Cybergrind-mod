@@ -38,9 +38,6 @@ public final class Cybergrind implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// ULTRAKILL's impact frames freeze Minecraft's mobs too (needs the Cybergrind Bridge plugin in ULTRAKILL)
-		HitStop.listen();
-		ServerTickEvents.START_SERVER_TICK.register(HitStop::tick);
 		ServerTickEvents.END_SERVER_TICK.register(server -> Arena.of(server).tick());
 		ServerLifecycleEvents.SERVER_STOPPING.register(Arena::shutdown);
 
@@ -63,8 +60,6 @@ public final class Cybergrind implements ModInitializer {
 		// ghast and blaze fireballs, wither skulls, witch potions and rapid shooters' arrows don't hurt other arena enemies;
 		// the Flying Elder Guardian has no thorns
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((victim, source, amount) -> !Abilities.blocked(victim, source));
-		// V1's i-frames (dashing, the moments after a hit, parries and impact frames, as ULTRAKILL reports them): no damage gets through
-		ServerLivingEntityEvents.ALLOW_DAMAGE.register((victim, source, amount) -> !(victim instanceof ServerPlayer && HitStop.invulnerable(source)));
 
 		// deaths: a Flying Elder Guardian leaves a heal orb, a Drone dives at you, a golem's death enrages the others
 		ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> Abilities.onDeath(entity));

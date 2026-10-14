@@ -63,12 +63,10 @@ public final class MenuScreen extends Screen {
 			.withValues(Settings.Outlines.values())
 			.withTooltip(o -> Tooltip.create(Component.literal("The red/gold/purple outlines on enemies, seen through walls. "
 				+ "Last 5 Enemies: only once a wave is down to its last 5.")))
-			.create(left, y, half, 20, Component.literal("Outlines"), (b, value) -> {
+			.create(left, y, WIDTH, 20, Component.literal("Enemy Outlines"), (b, value) -> {
 				s.outlines = value;
 				s.save();
 			}));
-		toggle(left + half + 4, y, half, "Impact Freeze", () -> s.hitStop, v -> s.hitStop = v,
-			"ULTRAKILL's impact frames, hit-stop and parry flashes freeze Minecraft's mobs for as long. Needs the Cybergrind Bridge plugin in ULTRAKILL.");
 		y += ROW;
 
 		// 2. numbers with steppers

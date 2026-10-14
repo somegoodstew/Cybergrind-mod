@@ -389,8 +389,8 @@ public final class Arena {
 	// ---- the tick ----
 
 	public void tick() {
-		if (HitStop.frozen()) {
-			// ULTRAKILL's impact frame: the run's clock waits with the frozen mobs
+		if (server.tickRateManager().isFrozen()) {
+			// frozen, e.g. ULTRAKILL's impact frames (ULTRAKILL x Minecraft freezes Minecraft): the run's clock waits with the mobs
 			return;
 		}
 		if (!active) {

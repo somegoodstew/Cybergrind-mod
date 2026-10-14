@@ -39,9 +39,6 @@ enemies and a settings menu. Made to be played as **V1** with the
 - **No status-effect cheese:** no poison, slowness, weakness, wither or darkness on you during a run. Witches only throw Harming.
 - **No friendly fire from their own attacks:** fireballs, skulls, potions, TNT, creeper blasts and archers' shots never hurt
   other enemies.
-- **ULTRAKILL's hit-stop and i-frames in Minecraft** (with the Cybergrind Bridge plugin): during ULTRAKILL's impact frames,
-  hit-stop and parry flashes the Minecraft mobs freeze for exactly as long, and while V1 is dashing (and right after a parry or a
-  hit) no damage gets through.
 - **A wave HUD:** boss bar, wave titles, a raid horn, armor-upgrade messages, and a red particle wall around the arena.
 - **Your own run music**: drop songs in a folder, then shuffle them or pick which ones play (see [Music](#music)).
 - **A settings menu**, opened with **K** or from the pause menu.
@@ -53,19 +50,14 @@ enemies and a settings menu. Made to be played as **V1** with the
 - **Minecraft: Java Edition 26.3** with **Fabric Loader** 0.19.3 or newer and **Fabric API** for 26.3.
 - **Java 25**, which the Minecraft launchers provide.
 - **Single-player only.**
-- Optional but Highly Recommended: **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** 0.1.2. With it, a V1 death
+- Optional but Highly Recommended: **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** 0.1.3. With it, a V1 death
   ends the run instantly, and the menu has a button for that mod's settings, including Progression Mode.
-- Optional, with ULTRAKILL x Minecraft: **Cybergrind Bridge** (`CybergrindBridge.dll`, on the Releases page), a small ULTRAKILL
-  plugin for the hit-stop freeze and V1's i-frames. Without it, everything else works. This will be here until **[ULTRAKILL x Minecraft](https://github.com/xandermodsstuff-dot/ultrakill-minecraft)** adds it.
 
 ## Installing
 
 1. Install Fabric Loader and Fabric API for 26.3, the same way as for any Fabric mod.
 2. Download `cybergrind-<version>.jar` from the [Releases](../../releases) page and put it in your `mods` folder.
 3. Start Minecraft, open a single-player world, and press **K**.
-4. Optional: put `CybergrindBridge.dll` in ULTRAKILL's `BepInEx\plugins` folder (next to `UKPassthrough.dll`). ULTRAKILL's log,
-   `BepInEx\LogOutput.log`, then says "Cybergrind Bridge: reporting ULTRAKILL's time stops", and Minecraft's says
-   "listening for ULTRAKILL's time stops". It only talks to Minecraft on your own PC (127.0.0.1, port 25633).
 
 To uninstall, delete the jar. Your settings are kept in `config/cybergrind.json`, and each world's best wave in that world's
 folder (`cybergrind.json`).
@@ -81,8 +73,7 @@ Cybergrind.
 | **Run Music** | Your own songs during a run (see [Music](#music)). |
 | **End on Death** | **On:** dying (V1 or Steve) ends the run at once. **Off:** the run goes on, and you're brought back to the arena after respawning. |
 | **Arena Wall** | **On:** a red ring around where you started, and 5 seconds outside it ends the run. **Off:** no wall, waves spawn around you, and enemies that fall far behind come back to you. |
-| **Outlines** | Enemy outlines: always / only for a wave's last 5 enemies / off. |
-| **Impact Freeze** | Mobs freeze during ULTRAKILL's impact frames (needs the Cybergrind Bridge plugin). |
+| **Enemy Outlines** | Always / only for a wave's last 5 enemies / off. |
 | **Starting Wave** | 1-999. Type it or use the buttons. |
 | **Max Enemies per Wave** | 5-100. Bosses come on top. Lower runs smoother. |
 | **Spawn Radius** | 8-40 blocks. The wall is 4 blocks further out. |
@@ -150,14 +141,6 @@ Open an [issue](../../issues) and say what you did and what went wrong. Attach M
 The jar is written to `build/libs/`. Building needs JDK 25. The Gradle wrapper downloads Gradle 9.7.1 and Fabric Loom on the
 first build. `./gradlew build -PdebugBuild=true` makes a development build, with a **Debug...** screen in the menu (every enemy
 with its stats, spawnable in front of you); release builds don't have it.
-
-The Cybergrind Bridge plugin (`bridge/`) builds against your own ULTRAKILL install with the .NET SDK:
-
-```bash
-dotnet build bridge -c Release -p:UltrakillDir="C:\path\to\ULTRAKILL"
-```
-
-It ends up in `bridge/bin/Release/netstandard2.1/`.
 
 ## Credits
 

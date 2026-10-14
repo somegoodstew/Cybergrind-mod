@@ -20,6 +20,3 @@ remappedSrc/
 .DS_Store
 Thumbs.db
 
-# Cybergrind Bridge (C#) build output
-bridge/bin/
-bridge/obj/
