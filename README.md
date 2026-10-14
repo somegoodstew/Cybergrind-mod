@@ -1,6 +1,6 @@
 # Cybergrind for Ultrakill X Minecraft
 
-![Wave 28 starts, then a chain of explosions](docs/media/wave28.gif)
+![Wave 28](docs/media/wave28.gif)
 
 [![Watch the full showcase on YouTube](https://img.youtube.com/vi/eWu_tSvfp5c/maxresdefault.jpg)](https://www.youtube.com/watch?v=eWu_tSvfp5c)
 
